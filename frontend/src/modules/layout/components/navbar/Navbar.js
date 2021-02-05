@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
+import { useSelector } from "react-redux";
+
 let Navbar = () => {
+  let cartInfo = useSelector((state) => {
+    return state.order;
+  });
+
+  let { cartItems } = cartInfo;
   return (
     <React.Fragment>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -55,9 +63,11 @@ let Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/user/profile">
+              <Link className="nav-link" to="/orders/cart">
                 <i className="fas fa-shopping-cart">
-                  <span className="badge badge-success">2</span>
+                  <span className="badge badge-success">
+                    {cartItems.length}
+                  </span>
                 </i>
               </Link>
             </li>

@@ -1,10 +1,46 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import {
+  decrProductQty,
+  incrProductQty,
+  deleteProductFromCart,
+} from "../../../redux/order/order.action";
+
 let Cart = () => {
   let OrderInfo = useSelector((state) => {
     return state.order;
   });
+  let dispatch = useDispatch();
   let { cartItems } = OrderInfo;
+  let Tax = 5.0;
+
+  let calcTotal = () => {
+    let result = 0;
+    if (cartItems.length > 0) {
+      for (let item of cartItems) {
+        result += item.price * item.qty;
+      }
+    }
+    return result;
+  };
+  let calcTax = () => {
+    return (calcTotal() * Tax) / 100;
+  };
+  let calcGrandTotal = () => {
+    return calcTotal() + calcTax();
+  };
+
+  let decrHandler = (productId) => {
+    dispatch(decrProductQty(productId));
+  };
+  let incrHandler = (productId) => {
+    dispatch(incrProductQty(productId));
+  };
+  let deleteHandler = (productId) => {
+    dispatch(deleteProductFromCart(productId));
+  };
   return (
     <React.Fragment>
       <section className="p-3 bg-primary text-center">
@@ -16,7 +52,7 @@ let Cart = () => {
           </div>
         </div>
       </section>
-      <pre>{JSON.stringify(cartItems)}</pre>
+      {/*   <pre>{JSON.stringify(cartItems)}</pre> */}
       <React.Fragment>
         <section className="mt-2">
           <div className="container">
@@ -52,14 +88,26 @@ let Cart = () => {
                               </td>
                               <td>{cartItem.name}</td>
                               <td>
-                                <i className="fa fa-minus-circle"></i>
+                                <i
+                                  className="fa fa-minus-circle"
+                                  onClick={decrHandler.bind(this, cartItem._id)}
+                                ></i>
                                 {cartItem.qty}
-                                <i className="fa fa-plus-circle"></i>
+                                <i
+                                  className="fa fa-plus-circle"
+                                  onClick={incrHandler.bind(this, cartItem._id)}
+                                ></i>
                               </td>
                               <td>{cartItem.price}</td>
                               <td>{cartItem.price * cartItem.qty}</td>
                               <td>
-                                <i class="fa fa-trash"></i>
+                                <i
+                                  class="fa fa-trash"
+                                  onClick={deleteHandler.bind(
+                                    this,
+                                    cartItem._id
+                                  )}
+                                ></i>
                               </td>
                             </tr>
                           );
@@ -77,14 +125,21 @@ let Cart = () => {
                   </div>
                   <div className="card-body">
                     <ul className="list-group">
-                      <li className="list-group-item">Total:</li>
-                      <li className="list-group-item">Tax:</li>
-                      <li className="list-group-item">Grand Total:</li>
+                      <li className="list-group-item">Total: {calcTotal()}</li>
+                      <li className="list-group-item">Tax: {calcTax()}</li>
+                      <li className="list-group-item">
+                        Grand Total: {calcGrandTotal()}
+                      </li>
                     </ul>
-                    <button className="btn btn-success mt-3">CheckOut</button>
-                    <button className="btn btn-primary ml-3 mt-3">
-                      Continue...
-                    </button>
+                    <Link
+                      to="/orders/checkout"
+                      className="btn btn-success btn-sm "
+                    >
+                      Check Out
+                    </Link>
+                    <Link to="/" className="btn btn-success btn-sm m-4">
+                      Continue Shoping...
+                    </Link>
                   </div>
                 </div>
               </div>

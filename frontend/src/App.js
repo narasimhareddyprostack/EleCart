@@ -36,6 +36,7 @@ let App = () => {
             <Route exact path="/product/laptops" component={Laptops}></Route>
             <Route exact path="/product/mobiles" component={Mobiles}></Route>
             <Route exact path="/product/:id" component={ProductDetails}></Route>
+            <Route exact path="/Orders/checkout" component={Home}></Route>
           </Switch>
         </Router>
       </Provider>

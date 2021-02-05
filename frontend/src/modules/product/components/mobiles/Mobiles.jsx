@@ -18,7 +18,7 @@ let Mobiles = () => {
   }, [dispatch]);
 
   let clickAddToCart = (product) => {
-    dispatch(addToCart(product, "1", history));
+    dispatch(addToCart(product, 1, history));
   };
   //dispatch actions
   return (
