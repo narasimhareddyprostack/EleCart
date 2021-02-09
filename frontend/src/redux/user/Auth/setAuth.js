@@ -10,3 +10,6 @@ let setAuth = (token) => {
 };
 
 export { setAuth };
+
+
+//we are sending token as HTTP header with help of AXIOS 3rd party library.

@@ -18,5 +18,4 @@ let authenticate = (req, res, next) => {
   req.user = payload.user;
   next();
 };
-
 module.exports = authenticate;

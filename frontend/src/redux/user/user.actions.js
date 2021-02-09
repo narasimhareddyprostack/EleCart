@@ -1,5 +1,5 @@
 import axios from "axios";
-// import { setAuth } from "./Auth/setAuth";
+import { setAuth } from "./Auth/setAuth";
 //action types
 const USER_REQUEST = "USER_REQUEST";
 const USER_SUCCESS = "USER_SUCCESS";
@@ -8,6 +8,10 @@ const USER_FAILURE = "USER_FAILURE";
 const LOGIN_REQUEST = "LOGIN_REQUEST";
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 const LOGIN_FAILURE = "LOGIN_FAILURE";
+
+const GET_USER_INFO_REQUEST = "GET_USER_INFO_REQUEST";
+const GET_USER_INFO_SUCCESS = "GET_USER_INFO_SUCCESS";
+const GET_USER_INFO_FAILURE = "GET_USER_INFO_FAILURE";
 
 //Login Actions
 let getLoginAction = (user, history) => {
@@ -26,7 +30,7 @@ let getLoginAction = (user, history) => {
         config
       );
       dispatch({ type: LOGIN_SUCCESS, payload: response.data });
-      // dispatch(getUserInfo());
+      dispatch(getUserInfo());
       history.push("/");
     } catch (err) {
       dispatch({ type: LOGIN_FAILURE, payload: err });
@@ -59,14 +63,33 @@ let getSignUp = (user, history) => {
     }
   };
 };
+let getUserInfo = () => {
+  return async (dispatch) => {
+    try {
+      if (localStorage.token) {
+        //setting HTTP headers
+        setAuth(localStorage.getItem("token"));
+      }
+      dispatch({ type: GET_USER_INFO_REQUEST });
+      let response = await axios.get(`http://localhost:8000/user/`);
+      dispatch({ type: GET_USER_INFO_SUCCESS, payload: response.data });
+    } catch (err) {
+      dispatch({ type: GET_USER_INFO_FAILURE, payload: err });
+    }
+  };
+};
 
 export {
   getSignUp,
   getLoginAction,
+  getUserInfo,
   USER_REQUEST,
   USER_SUCCESS,
   USER_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  GET_USER_INFO_REQUEST,
+  GET_USER_INFO_SUCCESS,
+  GET_USER_INFO_FAILURE,
 };
